@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -9,20 +8,26 @@ class PathTrackingMap extends StatefulWidget {
   const PathTrackingMap({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _PathTrackingMapState createState() => _PathTrackingMapState();
 }
 
 class _PathTrackingMapState extends State<PathTrackingMap> {
   late Location location;
-  late LocationData currentLocation;
+  LocationData? currentLocation;
   late List<LatLng> path;
   bool isTracking = false;
+
+  Future<void> initializeLocation() async {
+    currentLocation = await location.getLocation(); // Assuming getLocation() is an async method
+    setState(() {}); // Triggers a rebuild when currentLocation is ready
+  }
 
   @override
   void initState() {
     super.initState();
     location = Location();
+
+    initializeLocation();
     path = [];
     startLocationTracking();
   }
@@ -63,12 +68,12 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
         title: const Text('Beaup\'orientation'),
         backgroundColor: Color(CustomTheme.primaryColor.value),
       ),
-      // ignore: unnecessary_null_comparison
       body: currentLocation == null
           ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
               options: MapOptions(
-                initialCenter: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+                initialCenter: LatLng(
+                    currentLocation!.latitude!, currentLocation!.longitude!),
                 initialZoom: 15.0,
               ),
               children: [
@@ -90,7 +95,8 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
                     Marker(
                       width: 50.0,
                       height: 50.0,
-                      point: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+                      point: LatLng(
+                          currentLocation!.latitude!, currentLocation!.longitude!),
                       child: const Icon(
                         Icons.my_location,
                         color: Colors.red,
@@ -99,7 +105,7 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
                     ),
                   ],
                 ),
-              ]
+              ],
             ),
     );
   }
