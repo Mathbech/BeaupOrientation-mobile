@@ -1,8 +1,10 @@
+import 'package:beauporientation/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-import '../theme/theme.dart';
+import '../widgets/polylines_layer.dart';
+import '../widgets/marker_layer.dart';
 
 class PathTrackingMap extends StatefulWidget {
   const PathTrackingMap({super.key});
@@ -64,10 +66,7 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Beaup\'orientation'),
-        backgroundColor: Color(CustomTheme.primaryColor.value),
-      ),
+      appBar: CustomAppBar(title: 'Carte de suivi'),
       body: currentLocation == null
           ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
@@ -81,29 +80,12 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                 ),
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: path,
-                      strokeWidth: 4.0,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      width: 50.0,
-                      height: 50.0,
-                      point: LatLng(
-                          currentLocation!.latitude!, currentLocation!.longitude!),
-                      child: const Icon(
-                        Icons.my_location,
-                        color: Colors.red,
-                        size: 30.0,
-                      ),
-                    ),
-                  ],
+                CustomPolylineLayer(path: path),
+                CustomMarkerLayer(
+                  currentLocation: LatLng(
+                    currentLocation!.latitude!,
+                    currentLocation!.longitude!,
+                  ),
                 ),
               ],
             ),

@@ -14,4 +14,6 @@ final class CustomColors {
   static Color onBackground = const Color(0xFFFFFFFF);
   static Color onSurface = const Color(0xFFFFFFFF);
   static Color onError = const Color(0xFF000000);
+  static Color appBar = const Color.fromARGB(255, 4, 133, 252);
+  static Color marker = const Color.fromARGB(255, 10, 22, 160);
 }
