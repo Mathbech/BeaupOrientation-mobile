@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import '../services/location_service.dart';
 import '../widgets/polylines_layer.dart';
 import '../widgets/marker_layer.dart';
 import '../widgets/custom_drawer.dart';
@@ -15,60 +16,38 @@ class PathTrackingMap extends StatefulWidget {
 }
 
 class _PathTrackingMapState extends State<PathTrackingMap> {
-  late Location location;
+  final LocationService _locationService = LocationService();
   LocationData? currentLocation;
   late List<LatLng> path;
-  bool isTracking = false;
-
-  Future<void> initializeLocation() async {
-    currentLocation = await location.getLocation(); // Assuming getLocation() is an async method
-    setState(() {}); // Triggers a rebuild when currentLocation is ready
-  }
 
   @override
   void initState() {
     super.initState();
-    location = Location();
-
-    initializeLocation();
     path = [];
-    startLocationTracking();
+    _initializeLocationTracking();
   }
 
-  void startLocationTracking() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
+  Future<void> _initializeLocationTracking() async {
+    bool locationGranted = await _locationService.checkAndRequestLocationPermission();
 
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
-    }
-
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    location.changeSettings(interval: 1000); // Update every second
-    location.onLocationChanged.listen((LocationData locData) {
-      setState(() {
-        currentLocation = locData;
-        path.add(LatLng(locData.latitude!, locData.longitude!));
+    if (locationGranted) {
+      _locationService.startLocationTracking()?.listen((locData) {
+        setState(() {
+          currentLocation = locData;
+          path.add(LatLng(locData.latitude!, locData.longitude!));
+        });
       });
-    });
+    } else {
+      // Si l'autorisation est refusée, on peut afficher un message ou rediriger l'utilisateur
+      print("Autorisation de localisation refusée");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Carte de suivi', showMenuButton: true),
-      drawer: CustomDrawer(),  // Utilise le Drawer personnalisé
+      drawer: CustomDrawer(),
       body: currentLocation == null
           ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
@@ -92,5 +71,11 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
               ],
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    _locationService.stopLocationTracking();
+    super.dispose();
   }
 }
