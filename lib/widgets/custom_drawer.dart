@@ -29,7 +29,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.map),
-            title: Text('Carte de Suivi'),
+            title: Text('Carte'),
             onTap: () {
               Navigator.pushNamed(context, AppRoutes.pathTrackingMap);
             },
