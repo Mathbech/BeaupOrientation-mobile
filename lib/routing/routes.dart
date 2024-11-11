@@ -1,5 +1,6 @@
 import 'package:beauporientation/pages/prof_login.dart';
 import 'package:beauporientation/pages/selection_page.dart';
+import 'package:beauporientation/pages/student_login.dart';
 import 'package:flutter/material.dart';
 import '../pages/map.dart';
 
@@ -14,6 +15,7 @@ class AppRoutes {
     return {
       home: (context) => SelectionPage(),
       profLogin: (context) => ProfLoginPage(),
+      studentLogin: (context) => StudentLoginPage(),
       pathTrackingMap: (context) => const PathTrackingMap(),
     };
   }

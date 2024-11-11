@@ -16,15 +16,14 @@ class SelectionPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/profLogin');
               },
-              child: Text('Je suis Professeur'),
+              child: Text('Connextion professeurs'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // // Navigator.pushNamed(context, '/studentLogin');
-                // print('eleve');
+                Navigator.pushNamed(context, '/studentLogin');
               },
-              child: Text('Je suis Élève'),
+              child: Text('Connexion Étudiants'),
             ),
           ],
         ),
