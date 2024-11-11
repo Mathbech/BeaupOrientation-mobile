@@ -1,5 +1,5 @@
+import 'package:beauporientation/routing/routes.dart';
 import 'package:flutter/material.dart';
-import './pages/map.dart';
 import './theme/theme.dart';
 
 
@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Beaup\'orientation',
       theme: CustomTheme,
-      home: const PathTrackingMap(),
+      initialRoute: AppRoutes.home,
+      routes: AppRoutes.getRoutes(),
     );
   }
 }

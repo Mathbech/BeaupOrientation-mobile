@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import '../widgets/polylines_layer.dart';
 import '../widgets/marker_layer.dart';
+import '../widgets/custom_drawer.dart';
 
 class PathTrackingMap extends StatefulWidget {
   const PathTrackingMap({super.key});
@@ -66,7 +67,8 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Carte de suivi'),
+      appBar: CustomAppBar(title: 'Carte de suivi', showMenuButton: true),
+      drawer: CustomDrawer(),  // Utilise le Drawer personnalisé
       body: currentLocation == null
           ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
