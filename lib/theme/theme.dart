@@ -4,5 +4,10 @@ import './colors.dart';
 final ThemeData CustomTheme = ThemeData(
   primaryColor: CustomColors.primary,
   secondaryHeaderColor: CustomColors.secondary,
-  // Add other theme properties here
+  appBarTheme: AppBarTheme(
+    backgroundColor: CustomColors.appBar,
+  ),
 );
+
+class MarkerLayerThemeData {
+}

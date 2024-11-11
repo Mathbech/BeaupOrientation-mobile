@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Beaup\'orientation',
-      themeMode: ThemeMode.dark,
       theme: CustomTheme,
       home: const PathTrackingMap(),
     );
