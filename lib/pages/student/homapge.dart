@@ -1,3 +1,5 @@
+import 'package:beauporientation/widgets/custom_app_bar.dart';
+import 'package:beauporientation/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
 class StudentHomePage extends StatelessWidget {
@@ -9,7 +11,8 @@ class StudentHomePage extends StatelessWidget {
     final int beaconsToFind = 5;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Accueil Étudiant')),
+      appBar: CustomAppBar(title: 'Accueil Étudiant', showMenuButton: true),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

@@ -1,3 +1,5 @@
+import 'package:beauporientation/widgets/custom_app_bar.dart';
+import 'package:beauporientation/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 
 
@@ -9,7 +11,8 @@ class TeacherHomePage extends StatelessWidget {
     final List<String> studentsOnActiveCourse = ['Étudiant A', 'Étudiant B', 'Étudiant C'];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Accueil Professeur')),
+      appBar: CustomAppBar(title: 'Accueil Profeseur', showMenuButton: true),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
