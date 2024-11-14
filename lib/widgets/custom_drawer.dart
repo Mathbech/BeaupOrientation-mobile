@@ -5,7 +5,7 @@ class CustomDrawer extends StatelessWidget {
   bool isProf =
       false; // votre logique pour déterminer si l'utilisateur est un professeur
   bool isEleve =
-      true;
+      false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +33,8 @@ class CustomDrawer extends StatelessWidget {
                 Navigator.pushNamed(context, AppRoutes.profHome);
               } else if (isEleve) {
                 Navigator.pushNamed(context, AppRoutes.eleveHome);
+              }else {
+                Navigator.pushNamed(context, AppRoutes.home);
               }
             },
           ),
