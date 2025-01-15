@@ -19,12 +19,6 @@ class SelectionPage extends StatelessWidget {
               child: Text('Connexion professeurs'),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/studentLogin');
-              },
-              child: Text('Connexion Étudiants'),
-            ),
           ],
         ),
       ),
