@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
-// import '../widgets/custom_app_bar.dart';
-// import '../widgets/custom_drawer.dart';
+import '../widgets/custom_app_bar.dart';
+import '../widgets/custom_drawer.dart';
 import 'dart:developer';
 
 class LoginPage extends StatefulWidget {
@@ -33,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(title: 'Login', showMenuButton: true),
+      drawer: CustomDrawer(),
       body: Column(
         children: <Widget>[
           Expanded(flex: 4, child: _buildQrView(context)),
