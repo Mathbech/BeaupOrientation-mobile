@@ -1,7 +1,7 @@
-import 'package:beauporientation/pages/login.dart';
-import 'package:beauporientation/pages/student/homapge.dart';
-import 'package:beauporientation/pages/teachers/homepage.dart';
 import 'package:flutter/material.dart';
+import '../pages/login.dart';
+import '../pages/student/homapge.dart';
+import '../pages/teachers/homepage.dart';
 import '../pages/map.dart';
 
 class AppRoutes {
@@ -13,13 +13,12 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      home: (context) => LoginPage(),
+      home: (context) => const LoginPage(),
       pathTrackingMap: (context) => const PathTrackingMap(),
       profHome: (context) => TeacherHomePage(),
       eleveHome: (context) => StudentHomePage(),
     };
   }
-
 
   static Widget buildPageWithoutBackButton(Widget page) {
     return WillPopScope(

@@ -29,13 +29,13 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Accueil'),
             onTap: () {
-              if (isProf) {
+              // if (isProf) {
                 Navigator.pushNamed(context, AppRoutes.profHome);
-              } else if (isEleve) {
-                Navigator.pushNamed(context, AppRoutes.eleveHome);
-              }else {
-                Navigator.pushNamed(context, AppRoutes.home);
-              }
+              // } else if (isEleve) {
+                // Navigator.pushNamed(context, AppRoutes.eleveHome);
+              // }else {
+              //   Navigator.pushNamed(context, AppRoutes.home);
+              // }
             },
           ),
           ListTile(
