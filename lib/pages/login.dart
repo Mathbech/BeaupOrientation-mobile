@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../routing/routes.dart';
-import 'package:logger/logger.dart';
-import '../shared/runner.dart'; // Importez Runner
+import '../shared/runner.dart';
+import '../providers/runner_provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -29,21 +29,23 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final runner = await ApiService().loginWithCode(code); // Utilisez la méthode loginWithCode
+      final runner = await ApiService().loginWithCode(code);
 
       setState(() {
         isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login successful.')),
-      );
-
       if (runner != null) {
+        Provider.of<RunnerProvider>(context, listen: false).setRunner(runner);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login successful.')),
+        );
+
         if (runner.isTeacher) {
-          Navigator.pushNamed(context, AppRoutes.profHome); // Redirigez vers la page d'accueil des enseignants
+          Navigator.pushNamed(context, AppRoutes.profHome);
         } else {
-          Navigator.pushNamed(context, AppRoutes.eleveHome); // Redirigez vers la page d'accueil des étudiants
+          Navigator.pushNamed(context, AppRoutes.eleveHome);
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,8 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               controller: codeController,
               decoration: InputDecoration(
-                labelText: 'Enter your code (e.g., Course1-12)',
-                border: OutlineInputBorder(),
+                labelText: 'Code',
               ),
             ),
             SizedBox(height: 20),
