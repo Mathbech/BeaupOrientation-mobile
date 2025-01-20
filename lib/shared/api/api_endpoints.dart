@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static const String baseUrl = 'https://api.example.com';
-  static const String login = '/runner/login';
+  static const String baseUrl = 'http://192.168.107.28/api';
+  static const String login = '/runners/login';
   static const String submitData = '/runner/data';
 }

@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../routing/routes.dart';
+import 'package:logger/logger.dart';
+import '../shared/runner.dart'; // Importez Runner
 
 class LoginPage extends StatefulWidget {
   @override
@@ -26,24 +29,35 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final runner = await ApiService().loginWithCode(code);
+      final runner = await ApiService().loginWithCode(code); // Utilisez la méthode loginWithCode
 
-      if (runner != null) {
-        // Rediriger vers la page d'accueil du coureur
-        Navigator.pushReplacementNamed(context, AppRoutes.eleveHome);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Invalid code. Please try again.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
-    } finally {
       setState(() {
         isLoading = false;
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login successful.')),
+      );
+
+      if (runner != null) {
+        if (runner.isTeacher) {
+          Navigator.pushNamed(context, AppRoutes.profHome); // Redirigez vers la page d'accueil des enseignants
+        } else {
+          Navigator.pushNamed(context, AppRoutes.eleveHome); // Redirigez vers la page d'accueil des étudiants
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed. Please try again.')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred. Please try again.')),
+      );
     }
   }
 
