@@ -13,7 +13,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      home: (context) => const LoginPage(),
+      home: (context) => LoginPage(),
       pathTrackingMap: (context) => const PathTrackingMap(),
       profHome: (context) => TeacherHomePage(),
       eleveHome: (context) => StudentHomePage(),

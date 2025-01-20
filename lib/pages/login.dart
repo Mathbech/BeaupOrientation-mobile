@@ -1,42 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_drawer.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
-  BarcodeCapture? result;
-  MobileScannerController scannerController = MobileScannerController();
-  bool isTorchOn = false; // Add a variable to keep track of the torch state
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _codeController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this); // Observe the app lifecycle
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this); // Remove observer
-    scannerController.dispose(); // Dispose of the scanner controller
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // Pause the camera when the app goes into background
-      scannerController.stop();
-    } else if (state == AppLifecycleState.resumed) {
-      // Resume the camera when the app comes to foreground
-      scannerController.start();
-    }
+  void _submitCode() {
+    final code = _codeController.text;
+    // Handle code submission logic here
+    print('Submitted code: $code');
   }
 
   @override
@@ -44,67 +21,25 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     return Scaffold(
       appBar: CustomAppBar(title: 'Login', showMenuButton: true),
       drawer: CustomDrawer(),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 4,
-            child: MobileScanner(
-              controller: scannerController,
-              onDetect: (barcodeCapture) {
-                setState(() {
-                  result = barcodeCapture;
-                });
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (result != null)
-                    Text(
-                      'Barcode Type: ${result?.barcodes.first.type.name ?? "Unknown"}\nData: ${result?.barcodes.first.rawValue ?? "No Data"}',
-                    )
-                  else
-                    const Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          scannerController.toggleTorch();
-                          setState(() {
-                            isTorchOn = !isTorchOn; // Update the torch state
-                          });
-                        },
-                        child: Text(
-                          isTorchOn ? 'Flash: ON' : 'Flash: OFF',
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          scannerController.stop(); // Pause the scanner
-                        },
-                        child: const Text('Pause'),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          scannerController.start(); // Resume the scanner
-                        },
-                        child: const Text('Resume'),
-                      ),
-                    ],
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _codeController,
+              decoration: InputDecoration(
+                labelText: 'Enter your unique code',
+                border: OutlineInputBorder(),
               ),
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _submitCode,
+              child: Text('Submit'),
+            ),
+          ],
+        ),
       ),
     );
   }
