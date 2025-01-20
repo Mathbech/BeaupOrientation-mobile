@@ -27,4 +27,19 @@ class ApiService {
       throw Exception('Failed to login');
     }
   }
+
+  Future<Map<String, dynamic>> fetchStudentData(int runnerId) async {
+    final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.runners}$runnerId');
+    logger.i('Sending GET request to $url');
+
+    final response = await http.get(url);
+
+    logger.i('Received response: ${response.statusCode} ${response.body}');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch student data');
+    }
+  }
 }

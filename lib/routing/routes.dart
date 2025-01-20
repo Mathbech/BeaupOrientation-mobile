@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/login.dart';
-import '../pages/student/homapge.dart';
+import '../pages/student/hompage.dart';
 import '../pages/teachers/homepage.dart';
 import '../pages/map.dart';
 
