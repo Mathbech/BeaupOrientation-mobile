@@ -3,6 +3,7 @@ import '../pages/login.dart';
 import '../pages/student/hompage.dart';
 import '../pages/teachers/homepage.dart';
 import '../pages/map.dart';
+import '../pages/teachers/addMarker.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -10,6 +11,7 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String profHome = '/profHome';
   static const String eleveHome = '/eleveHome';
+  static const String addMarker = '/addMarker';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -17,6 +19,7 @@ class AppRoutes {
       pathTrackingMap: (context) => const PathTrackingMap(),
       profHome: (context) => TeacherHomePage(),
       eleveHome: (context) => StudentHomePage(),
+      addMarker: (context) => AddMarkerPage(),
     };
   }
 

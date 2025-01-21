@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import '../shared/api/api_endpoints.dart';
 import '../shared/runner.dart';
-import '../shared/api/api_response.dart';
 
 class ApiService {
   final logger = Logger();

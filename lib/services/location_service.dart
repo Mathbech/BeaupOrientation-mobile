@@ -1,5 +1,4 @@
 import 'package:location/location.dart';
-import 'package:latlong2/latlong.dart';
 
 class LocationService {
   final Location _location = Location();

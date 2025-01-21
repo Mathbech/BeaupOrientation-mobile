@@ -39,6 +39,16 @@ class CustomDrawer extends StatelessWidget {
               }
             },
           ),
+          if (isProf) ...[
+            ListTile(
+              leading: Icon(Icons.school),
+              title: Text('Teacher Section'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.addMarker);
+              },
+            ),
+          ],
+
           ListTile(
             leading: Icon(Icons.map),
             title: Text('Carte'),
