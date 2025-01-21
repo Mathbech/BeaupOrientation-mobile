@@ -1,23 +1,24 @@
-import 'package:beauporientation/pages/prof_login.dart';
-import 'package:beauporientation/pages/selection_page.dart';
 import 'package:flutter/material.dart';
+import '../pages/login.dart';
+import '../pages/student/hompage.dart';
+import '../pages/teachers/homepage.dart';
 import '../pages/map.dart';
 
 class AppRoutes {
   static const String home = '/';
   static const String pathTrackingMap = '/Map';
   static const String settings = '/settings';
-  static const String profLogin = '/profLogin';
-  static const String studentLogin = '/studentLogin';
+  static const String profHome = '/profHome';
+  static const String eleveHome = '/eleveHome';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      home: (context) => SelectionPage(),
-      profLogin: (context) => ProfLoginPage(),
+      home: (context) => LoginPage(),
       pathTrackingMap: (context) => const PathTrackingMap(),
+      profHome: (context) => TeacherHomePage(),
+      eleveHome: (context) => StudentHomePage(),
     };
   }
-
 
   static Widget buildPageWithoutBackButton(Widget page) {
     return WillPopScope(

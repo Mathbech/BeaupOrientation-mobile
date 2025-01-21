@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/runner_provider.dart';
 import '../routing/routes.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final runner = Provider.of<RunnerProvider>(context).runner;
+    final bool isProf = runner?.isTeacher ?? false;
+    final bool isEleve = runner != null && !runner.isTeacher;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -24,7 +30,13 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Accueil'),
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.home);
+              if (isProf) {
+                Navigator.pushNamed(context, AppRoutes.profHome);
+              } else if (isEleve) {
+                Navigator.pushNamed(context, AppRoutes.eleveHome);
+              } else {
+                return;
+              }
             },
           ),
           ListTile(
@@ -39,6 +51,14 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Paramètres'),
             onTap: () {
               Navigator.pushNamed(context, AppRoutes.settings);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Déconnexion'),
+            onTap: () {
+              // Logique de déconnexion
+              Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
             },
           ),
         ],
