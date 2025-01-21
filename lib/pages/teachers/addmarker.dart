@@ -1,6 +1,8 @@
 import 'package:beauporientation/widgets/custom_app_bar.dart';
 import 'package:beauporientation/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class AddMarkerPage extends StatefulWidget {
   const AddMarkerPage({super.key});
@@ -12,11 +14,49 @@ class AddMarkerPage extends StatefulWidget {
 class _AddMarkerPageState extends State<AddMarkerPage> {
   final List<String> _markers = [];
 
-  void _addMarker() {
-    // Logique pour obtenir le point GPS actuel et ajouter une balise
+  Future<void> _addMarker() async {
+    Position position = await _determinePosition();
+    String address = await _getAddressFromLatLng(position);
+
     setState(() {
-      _markers.add('Balise ${_markers.length + 1}');
+      _markers.add('Balise ${_markers.length + 1}: $address');
     });
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<String> _getAddressFromLatLng(Position position) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      return '${place.street}, ${place.locality}, ${place.country}';
+    } catch (e) {
+      return 'Adresse non trouvée';
+    }
   }
 
   @override
