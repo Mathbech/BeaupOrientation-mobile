@@ -36,8 +36,8 @@ class StudentHomePage extends StatelessWidget {
           }
 
           final data = snapshot.data!;
-          final String courseNumber = data['course'];
-          final String runnerNumber = data['id'];
+          final courseNumber = data['course'];
+          final runnerNumber = data['id'];
 
           return Padding(
             padding: EdgeInsets.all(16.0),
