@@ -1,7 +1,10 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'api_service.dart';
 
 class MarkerAddService {
+  final ApiService _apiService = ApiService();
+
   // Détermine la position actuelle
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -39,4 +42,9 @@ class MarkerAddService {
       return 'Adresse non trouvée';
     }
   }
+  // Enregistre la balise via une API
+  Future<void> saveMarker(Position position, String address, String city, String zipCode, String country, int teacherId) async {
+    await _apiService.saveMarker(position, address, city, zipCode, country, teacherId);
+  }
+
 }

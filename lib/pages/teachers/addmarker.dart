@@ -16,12 +16,23 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
   final MarkerAddService _markerAddService = MarkerAddService();
 
   Future<void> _addMarker() async {
-    Position position = await _markerAddService.determinePosition();
-    String address = await _markerAddService.getAddressFromLatLng(position);
+    try {
+      Position position = await _markerAddService.determinePosition();
+      String address = await _markerAddService.getAddressFromLatLng(position);
+      String city = 'Your City'; // Remplacez par la valeur réelle
+      String zipCode = 'Your ZipCode'; // Remplacez par la valeur réelle
+      String country = 'Your Country'; // Remplacez par la valeur réelle
+      int teacherId = 1; // Remplacez par l'ID réel du professeur
 
-    setState(() {
-      _markers.add('Balise ${_markers.length + 1}: $address');
-    });
+      await _markerAddService.saveMarker(address, position, city, zipCode, country, teacherId);
+
+      setState(() {
+        _markers.add('Balise ${_markers.length + 1}: $address');
+      });
+    } catch (e) {
+      // Gérer les erreurs ici
+      print('Erreur: $e');
+    }
   }
 
   @override
