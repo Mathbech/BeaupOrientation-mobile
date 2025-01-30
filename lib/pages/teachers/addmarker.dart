@@ -1,4 +1,5 @@
 import 'package:beauporientation/services/api_service.dart';
+import 'package:beauporientation/theme/colors.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -35,7 +36,10 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Une erreur s\'est produite lors de la récupération des balises')),
+        SnackBar(
+          content: Text('Une erreur s\'est produite lors de la récupération des balises'),
+          backgroundColor: CustomColors.error,
+        ),
       );
     }
   }
@@ -50,14 +54,17 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Marker saved successfully!'),
-          backgroundColor: Colors.green,
+          backgroundColor: CustomColors.success,
         ),
       );
 
       _fetchMarkers(); // Refresh the markers list after adding a new marker
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Une erreur s\'est produite')),
+        SnackBar(
+          content: Text('Une erreur s\'est produite'),
+          backgroundColor: CustomColors.error,
+        ),
       );
     }
   }

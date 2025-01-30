@@ -56,13 +56,13 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, AppRoutes.pathTrackingMap);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Paramètres'),
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.settings);
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.settings),
+          //   title: Text('Paramètres'),
+          //   onTap: () {
+          //     Navigator.pushNamed(context, AppRoutes.settings);
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Déconnexion'),
