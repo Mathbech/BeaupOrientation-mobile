@@ -1,3 +1,4 @@
+import 'package:beauporientation/services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -15,6 +16,29 @@ class AddMarkerPage extends StatefulWidget {
 class _AddMarkerPageState extends State<AddMarkerPage> {
   final List<String> _markers = [];
   final MarkerAddService _markerAddService = MarkerAddService();
+  final ApiService _apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMarkers();
+  }
+
+  Future<void> _fetchMarkers() async {
+    try {
+      List<Map<String, dynamic>> markers = await _apiService.fetchMarkers();
+      setState(() {
+        _markers.clear();
+        for (var marker in markers) {
+          _markers.add('Lat: ${marker['latitude']}, Lng: ${marker['longitude']}, Marker ID: ${marker['id']}');
+        }
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Une erreur s\'est produite lors de la récupération des balises')),
+      );
+    }
+  }
 
   Future<void> _addMarker() async {
     try {
@@ -22,6 +46,15 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       String teacherId = '2'; // Remplacez par l'ID réel du professeur
 
       await _markerAddService.saveMarker(position, teacherId);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Marker saved successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      _fetchMarkers(); // Refresh the markers list after adding a new marker
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Une erreur s\'est produite')),

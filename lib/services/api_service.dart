@@ -49,7 +49,6 @@ class ApiService {
   Future<void> saveMarker(Position position, String teacherId) async {
     final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.addMarkers}');
     try {
-      print(teacherId);
       final response = await http.post(
         url,
         body: jsonEncode({
@@ -83,7 +82,8 @@ class ApiService {
     logger.i('Received response: ${response.statusCode} ${response.body}');
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = json.decode(response.body);
+      return List<Map<String, dynamic>>.from(data['member']);
     } else {
       throw Exception('Failed to fetch markers');
     }
