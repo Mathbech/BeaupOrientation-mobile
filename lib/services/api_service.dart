@@ -65,8 +65,7 @@ class ApiService {
       );
 
       if (response.statusCode != 201 && response.statusCode != 200) {
-        throw Exception(
-            'Failed to save marker: ${response.statusCode} ${response.body}');
+        throw Exception('Failed to save marker: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       logger.i('Error : $e');
