@@ -43,8 +43,8 @@ class MarkerAddService {
     }
   }
   // Enregistre la balise via une API
-  Future<void> saveMarker(Position position, String address, String city, String zipCode, String country, int teacherId) async {
-    await _apiService.saveMarker(position, address, city, zipCode, country, teacherId);
+  Future<void> saveMarker(Position position, int teacherId) async {
+    await _apiService.saveMarker(position, teacherId);
   }
 
 }
