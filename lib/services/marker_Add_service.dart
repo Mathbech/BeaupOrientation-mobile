@@ -32,18 +32,18 @@ class MarkerAddService {
   }
 
   // Obtient l'adresse à partir des coordonnées
-  Future<String> getAddressFromLatLng(Position position) async {
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          position.latitude, position.longitude);
-      Placemark place = placemarks[0];
-      return '${place.street}, ${place.locality}, ${place.country}';
-    } catch (e) {
-      return 'Adresse non trouvée';
-    }
-  }
+  // Future<String> getAddressFromLatLng(Position position) async {
+  //   try {
+  //     List<Placemark> placemarks = await placemarkFromCoordinates(
+  //         position.latitude, position.longitude);
+  //     Placemark place = placemarks[0];
+  //     return '${place.street}, ${place.locality}, ${place.country}';
+  //   } catch (e) {
+  //     return 'Adresse non trouvée';
+  //   }
+  // }
   // Enregistre la balise via une API
-  Future<void> saveMarker(Position position, int teacherId) async {
+  Future<void> saveMarker(Position position, String teacherId) async {
     await _apiService.saveMarker(position, teacherId);
   }
 

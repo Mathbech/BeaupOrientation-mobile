@@ -19,12 +19,13 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
   Future<void> _addMarker() async {
     try {
       Position position = await _markerAddService.determinePosition();
-      int teacherId = 2; // Remplacez par l'ID réel du professeur
+      String teacherId = '2'; // Remplacez par l'ID réel du professeur
 
       await _markerAddService.saveMarker(position, teacherId);
     } catch (e) {
-      // Gérer les erreurs ici
-      Logger.e('Erreur: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Une erreur s\'est produite')),
+      );
     }
   }
 

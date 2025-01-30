@@ -46,9 +46,10 @@ class ApiService {
     }
   }
 
-  Future<void> saveMarker(Position position, int teacherId) async {
+  Future<void> saveMarker(Position position, String teacherId) async {
     final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.addMarkers}');
     try {
+      print(teacherId);
       final response = await http.post(
         url,
         body: jsonEncode({
@@ -59,7 +60,7 @@ class ApiService {
             "type": "Point",
             "coordinates": [position.latitude, position.longitude]
           },
-          // 'teacher': teacherId,
+          'teacher': '/api/users/$teacherId',
         }),
         headers: {'Content-Type': 'application/ld+json'},
       );
@@ -70,6 +71,21 @@ class ApiService {
     } catch (e) {
       logger.i('Error : $e');
       throw Exception('Failed to save marker: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchMarkers() async {
+    final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.viewMarkers}');
+    logger.i('Sending GET request to $url');
+
+    final response = await http.get(url);
+
+    logger.i('Received response: ${response.statusCode} ${response.body}');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch markers');
     }
   }
 }
