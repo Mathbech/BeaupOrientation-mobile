@@ -1,9 +1,11 @@
 import 'package:beauporientation/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../routing/routes.dart';
 import '../providers/runner_provider.dart';
+import '../providers/teacherid_provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -49,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (runner.isTeacher) {
+          Provider.of<TeacherProvider>(context, listen: false).setTeacherId(runner.teacherId);
           Navigator.pushNamed(context, AppRoutes.profHome);
         } else {
           Navigator.pushNamed(context, AppRoutes.eleveHome);
@@ -62,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     } catch (e) {
+      Logger().e('An error occurred: $e');
       setState(() {
         isLoading = false;
       });

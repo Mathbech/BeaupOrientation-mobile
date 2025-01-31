@@ -1,11 +1,13 @@
+import 'package:beauporientation/providers/teacherid_provider.dart';
 import 'package:beauporientation/services/api_service.dart';
 import 'package:beauporientation/theme/colors.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:logger/logger.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import '../../services/marker_add_service.dart';
+import 'package:provider/provider.dart';
+import '../../providers/runner_provider.dart';
 
 class AddMarkerPage extends StatefulWidget {
   const AddMarkerPage({super.key});
@@ -46,10 +48,11 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
 
   Future<void> _addMarker() async {
     try {
+      final teacher = Provider.of<TeacherProvider>(context, listen: false).teacherId;
       Position position = await _markerAddService.determinePosition();
-      String teacherId = '2'; // Remplacez par l'ID réel du professeur
+      int? teacherId = teacher; // Remplacez par l'ID réel du professeur
 
-      await _markerAddService.saveMarker(position, teacherId);
+      await _markerAddService.saveMarker(position, teacherId.toString());
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
