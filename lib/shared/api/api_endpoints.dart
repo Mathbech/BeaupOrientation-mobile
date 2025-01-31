@@ -4,5 +4,5 @@ class ApiEndpoints {
   static const String login = '/runners/login';
   static const String runners = '/runners/';
   static const String addMarkers = '/markers';
-  static const String viewMarkers = '/markers';
+  static const String viewMarkers = '/markers/display/all';
 }

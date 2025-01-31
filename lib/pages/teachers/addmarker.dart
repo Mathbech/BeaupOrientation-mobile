@@ -29,7 +29,8 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
 
   Future<void> _fetchMarkers() async {
     try {
-      List<Map<String, dynamic>> markers = await _apiService.fetchMarkers();
+       final teacherId = Provider.of<TeacherProvider>(context, listen: false).teacherId;
+      List<Map<String, dynamic>> markers = await _apiService.fetchMarkers(teacherId!);
       setState(() {
         _markers.clear();
         for (var marker in markers) {
