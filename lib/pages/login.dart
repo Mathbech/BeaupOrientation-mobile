@@ -1,8 +1,8 @@
+import 'package:beauporientation/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../routing/routes.dart';
-import '../shared/runner.dart';
 import '../providers/runner_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +19,10 @@ class _LoginPageState extends State<LoginPage> {
 
     if (code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid code.')),
+        SnackBar(
+          content: Text('Please enter a valid code.'),
+          backgroundColor: CustomColors.error,
+        ),
       );
       return;
     }
@@ -39,7 +42,10 @@ class _LoginPageState extends State<LoginPage> {
         Provider.of<RunnerProvider>(context, listen: false).setRunner(runner);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login successful.')),
+          SnackBar(
+            content: Text('Login successful.'),
+            backgroundColor: CustomColors.success,
+          ),
         );
 
         if (runner.isTeacher) {
@@ -49,7 +55,10 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed. Please try again.')),
+          SnackBar(
+            content: Text('Login failed. Please try again.'),
+            backgroundColor: CustomColors.error,
+          ),
         );
       }
     } catch (e) {
@@ -58,7 +67,10 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred. Please try again.')),
+        SnackBar(
+            content: Text('An error occurred. Please try again.'),
+            backgroundColor: CustomColors.error
+        ),
       );
     }
   }

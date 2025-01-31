@@ -3,8 +3,9 @@ class Runner {
   final String course;
   final String name;
   final bool isTeacher;
+  final int? teacherId;
 
-  Runner({required this.id, required this.course, required this.name, required this.isTeacher});
+  Runner({required this.id, required this.course, required this.name, required this.isTeacher, this.teacherId});
 
   factory Runner.fromJson(Map<String, dynamic> json) {
     return Runner(
@@ -12,6 +13,7 @@ class Runner {
       course: json['course'],
       name: json['name'],
       isTeacher: json['isTeacher'],
+      teacherId: json['teacherId'],
     );
   }
 }

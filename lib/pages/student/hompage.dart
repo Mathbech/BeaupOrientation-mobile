@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../providers/runner_provider.dart';
-import '../../shared/runner.dart';
 
 class StudentHomePage extends StatelessWidget {
   Future<Map<String, dynamic>> fetchStudentData(BuildContext context) async {

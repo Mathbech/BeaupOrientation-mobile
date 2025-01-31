@@ -39,6 +39,16 @@ class CustomDrawer extends StatelessWidget {
               }
             },
           ),
+          if (isProf) ...[
+            ListTile(
+              leading: Icon(Icons.school),
+              title: Text('Teacher Section'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.addMarker);
+              },
+            ),
+          ],
+
           ListTile(
             leading: Icon(Icons.map),
             title: Text('Carte'),
@@ -46,13 +56,13 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, AppRoutes.pathTrackingMap);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Paramètres'),
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.settings);
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.settings),
+          //   title: Text('Paramètres'),
+          //   onTap: () {
+          //     Navigator.pushNamed(context, AppRoutes.settings);
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Déconnexion'),
