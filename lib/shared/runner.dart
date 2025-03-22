@@ -3,9 +3,17 @@ class Runner {
   final String course;
   final String name;
   final bool isTeacher;
-  final int teacherId;
+  final int? teacherId; // Rend le champ nullable
+  final int courseId;
 
-  Runner({required this.id, required this.course, required this.name, required this.isTeacher, required this.teacherId});
+  Runner({
+    required this.id,
+    required this.course,
+    required this.name,
+    required this.isTeacher,
+    this.teacherId, // Pas requis
+    required this.courseId,
+  });
 
   factory Runner.fromJson(Map<String, dynamic> json) {
     return Runner(
@@ -13,7 +21,8 @@ class Runner {
       course: json['course'],
       name: json['name'],
       isTeacher: json['isTeacher'],
-      teacherId: json['teacherId'] ?? null,
+      teacherId: json['teacherId'], // Peut être null
+      courseId: json['courseId'],
     );
   }
 }

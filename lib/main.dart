@@ -1,3 +1,4 @@
+import 'package:beauporientation/providers/course_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/runner_provider.dart';
@@ -11,6 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => RunnerProvider()),
         ChangeNotifierProvider(create: (_) => TeacherProvider()),
+        ChangeNotifierProvider(create: (_) => CourseProvider()),
       ],
       child: MyApp(),
     ),

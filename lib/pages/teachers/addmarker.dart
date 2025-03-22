@@ -1,13 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:beauporientation/providers/teacherid_provider.dart';
+import 'package:beauporientation/providers/course_provider.dart';
 import 'package:beauporientation/services/api_service.dart';
 import 'package:beauporientation/theme/colors.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_drawer.dart';
-import 'package:flutter/material.dart';
-import '../../services/marker_add_service.dart';
+import '../../services/marker_service.dart';
 import 'package:provider/provider.dart';
-import '../../providers/runner_provider.dart';
 
 class AddMarkerPage extends StatefulWidget {
   const AddMarkerPage({super.key});
@@ -18,7 +18,7 @@ class AddMarkerPage extends StatefulWidget {
 
 class _AddMarkerPageState extends State<AddMarkerPage> {
   final List<String> _markers = [];
-  final MarkerAddService _markerAddService = MarkerAddService();
+  final MarkerService _markerService = MarkerService();
   final ApiService _apiService = ApiService();
 
   @override
@@ -29,18 +29,22 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
 
   Future<void> _fetchMarkers() async {
     try {
-       final teacherId = Provider.of<TeacherProvider>(context, listen: false).teacherId;
-      List<Map<String, dynamic>> markers = await _apiService.fetchMarkers(teacherId!);
+      final teacherId =
+          Provider.of<TeacherProvider>(context, listen: false).teacherId;
+      List<Map<String, dynamic>> markers =
+          await _apiService.fetchMarkers(teacherId!);
       setState(() {
         _markers.clear();
         for (var marker in markers) {
-          _markers.add('Lat: ${marker['latitude']}, Lng: ${marker['longitude']}, Marker ID: ${marker['id']}');
+          _markers.add(
+              'Lat: ${marker['latitude']}, Lng: ${marker['longitude']}, Marker ID: ${marker['id']}');
         }
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Une erreur s\'est produite lors de la récupération des balises'),
+          content: Text(
+              'Une erreur s\'est produite lors de la récupération des balises'),
           backgroundColor: CustomColors.error,
         ),
       );
@@ -49,11 +53,18 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
 
   Future<void> _addMarker() async {
     try {
-      final teacher = Provider.of<TeacherProvider>(context, listen: false).teacherId;
-      Position position = await _markerAddService.determinePosition();
-      int? teacherId = teacher; // Remplacez par l'ID réel du professeur
+      final teacherId =
+          Provider.of<TeacherProvider>(context, listen: false).teacherId;
+      final courseId =
+          Provider.of<CourseProvider>(context, listen: false).courseId;
 
-      await _markerAddService.saveMarker(position, teacherId.toString());
+      Position position = await _markerService.determinePosition();
+
+      await _markerService.saveMarker(
+        position,
+        teacherId.toString(),
+        courseId.toString(),
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -62,8 +73,9 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
         ),
       );
 
-      _fetchMarkers(); // Refresh the markers list after adding a new marker
+      _fetchMarkers(); // Refresh the markers list
     } catch (e) {
+      print('Erreur dans _addMarker: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Une erreur s\'est produite'),

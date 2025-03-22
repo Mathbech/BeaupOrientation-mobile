@@ -46,7 +46,7 @@ class ApiService {
     }
   }
 
-  Future<void> saveMarker(Position position, String teacherId) async {
+  Future<void> saveMarker(Position position, String teacherId, String courseId) async {
     final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.addMarkers}');
     try {
       final response = await http.post(
@@ -60,9 +60,12 @@ class ApiService {
             "coordinates": [position.latitude, position.longitude]
           },
           'teacher': '/api/users/$teacherId',
+          'courses': '/api/courses/$courseId',
         }),
         headers: {'Content-Type': 'application/ld+json'},
       );
+
+      logger.i('Received response: ${response.statusCode} ${response.body}');
 
       if (response.statusCode != 201 && response.statusCode != 200) {
         throw Exception('Failed to save marker: ${response.statusCode} ${response.body}');

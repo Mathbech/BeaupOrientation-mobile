@@ -6,6 +6,7 @@ import '../services/api_service.dart';
 import '../routing/routes.dart';
 import '../providers/runner_provider.dart';
 import '../providers/teacherid_provider.dart';
+import '../providers/course_provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -51,7 +52,8 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (runner.isTeacher) {
-          Provider.of<TeacherProvider>(context, listen: false).setTeacherId(runner.teacherId);
+          Provider.of<TeacherProvider>(context, listen: false).setTeacherId(runner.teacherId ?? 0);
+          Provider.of<CourseProvider>(context, listen: false).setCourseId(runner.courseId);
           Navigator.pushNamed(context, AppRoutes.profHome);
         } else {
           Navigator.pushNamed(context, AppRoutes.eleveHome);
