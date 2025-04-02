@@ -8,6 +8,7 @@ import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_drawer.dart';
 import '../../services/marker_service.dart';
 import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 
 class AddMarkerPage extends StatefulWidget {
   const AddMarkerPage({super.key});
@@ -20,6 +21,7 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
   final List<String> _markers = [];
   final MarkerService _markerService = MarkerService();
   final ApiService _apiService = ApiService();
+  final Logger _logger = Logger();
 
   @override
   void initState() {
@@ -74,8 +76,8 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       );
 
       _fetchMarkers(); // Refresh the markers list
-    } catch (e) {
-      print('Erreur dans _addMarker: $e');
+    } catch (e, stackTrace) {
+      _logger.e('Erreur dans _addMarker', error: e, stackTrace: stackTrace);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Une erreur s\'est produite'),
