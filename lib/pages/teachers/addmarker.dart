@@ -29,15 +29,15 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
 
   Future<void> _fetchMarkers() async {
     try {
-      final teacherId =
-          Provider.of<TeacherProvider>(context, listen: false).teacherId;
+      final courseId =
+          Provider.of<CourseProvider>(context, listen: false).courseId;
       List<Map<String, dynamic>> markers =
-          await _apiService.fetchMarkers(teacherId!);
+          await _apiService.fetchMarkers(courseId);
       setState(() {
         _markers.clear();
         for (var marker in markers) {
           _markers.add(
-              'Lat: ${marker['latitude']}, Lng: ${marker['longitude']}, Marker ID: ${marker['id']}');
+              'Lat: ${marker['latitude']}, Lng: ${marker['longitude']}');
         }
       });
     } catch (e) {

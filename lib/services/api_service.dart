@@ -77,7 +77,7 @@ class ApiService {
   }
 
   Future<List<Map<String, dynamic>>> fetchMarkers(int teacherId) async {
-    final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.viewMarkers}?runnerId=$teacherId');
+    final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.viewMarkers}?courseId=$teacherId');
     logger.i('Sending GET request to $url');
 
     final response = await http.get(url);
