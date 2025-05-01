@@ -17,7 +17,6 @@ class StudentHomePage extends StatelessWidget {
       );
     }
 
-    final courseNumber = runner.course;
     final runnerNumber = runner.name;
 
     return Scaffold(
@@ -34,7 +33,6 @@ class StudentHomePage extends StatelessWidget {
               if (barcodes.isNotEmpty) {
                 final String? rawValue = barcodes.first.rawValue;
                 if (rawValue != null) {
-                  print('QR Code scanné : $rawValue');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('QR Code scanné : $rawValue')),
                   );
@@ -42,14 +40,75 @@ class StudentHomePage extends StatelessWidget {
               }
             },
           ),
+          // Les coins du cadre
           Align(
             alignment: Alignment.center,
-            child: Container(
+            child: SizedBox(
               width: 250,
               height: 250,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red, width: 3),
-                borderRadius: BorderRadius.circular(12),
+              child: Stack(
+                children: [
+                  // Coin supérieur gauche
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Colors.red, width: 3),
+                          left: BorderSide(color: Colors.red, width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Coin supérieur droit
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Colors.red, width: 3),
+                          right: BorderSide(color: Colors.red, width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Coin inférieur gauche
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.red, width: 3),
+                          left: BorderSide(color: Colors.red, width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Coin inférieur droit
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.red, width: 3),
+                          right: BorderSide(color: Colors.red, width: 3),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
