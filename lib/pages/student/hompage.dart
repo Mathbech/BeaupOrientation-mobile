@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart'; // Importez la bibliothèque pour scanner les QR codes
 import 'package:provider/provider.dart';
 import '../../providers/runner_provider.dart';
+import '../../services/qr_code_service.dart';
 
 class StudentHomePage extends StatelessWidget {
+  final QRCodeService _qrCodeService = QRCodeService();
+
   @override
   Widget build(BuildContext context) {
     final runner = Provider.of<RunnerProvider>(context, listen: false).runner;
@@ -29,15 +32,7 @@ class StudentHomePage extends StatelessWidget {
         children: [
           MobileScanner(
             onDetect: (BarcodeCapture capture) {
-              final List<Barcode> barcodes = capture.barcodes;
-              if (barcodes.isNotEmpty) {
-                final String? rawValue = barcodes.first.rawValue;
-                if (rawValue != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('QR Code scanné : $rawValue')),
-                  );
-                }
-              }
+              _qrCodeService.handleQRCodeDetection(context, capture);
             },
           ),
           // Les coins du cadre
