@@ -44,14 +44,14 @@ class MarkerService {
       case 'Départ':
         typeInt = 1;
         break;
-      case 'Balise':
+      case 'Arrivée':
         typeInt = 2;
         break;
-      case 'Arrivée':
+      case 'Balise':
         typeInt = 3;
         break;
       default:
-        typeInt = 2; // Valeur par défaut
+        typeInt = 3; // Valeur par défaut
     }
 
     await _apiService.saveMarker(
