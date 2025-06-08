@@ -54,11 +54,12 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
       final markers = await _apiService.fetchMarkers(courseId);
       setState(() {
         markerPoints = markers
-        .map<LatLng>((m) => LatLng(
-              double.parse(m['latitude'].toString()),
-              double.parse(m['longitude'].toString()),
-            ))
-        .toList();
+            .where((m) => m['latitude'] != null && m['longitude'] != null)
+            .map<LatLng>((m) => LatLng(
+                  double.tryParse(m['latitude'].toString()) ?? 0.0,
+                  double.tryParse(m['longitude'].toString()) ?? 0.0,
+                ))
+            .toList();
       });
     } catch (e) {
       print('Erreur lors du chargement des marqueurs: $e');
