@@ -44,7 +44,7 @@ class MarkerService {
       case 'Départ':
         typeInt = 1;
         break;
-      case 'Intermédiaire':
+      case 'Balise':
         typeInt = 2;
         break;
       case 'Arrivée':

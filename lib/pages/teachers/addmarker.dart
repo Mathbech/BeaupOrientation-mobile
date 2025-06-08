@@ -24,9 +24,9 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
   final Logger _logger = Logger();
 
   final TextEditingController _nameController = TextEditingController();
-  String _selectedType = 'Intermédiaire';
+  String _selectedType = 'Balise';
 
-  final List<String> _markerTypes = ['Départ', 'Arrivée', 'Intermédiaire'];
+  final List<String> _markerTypes = ['Départ', 'Arrivée', 'Balise'];
 
   @override
   void dispose() {
@@ -103,7 +103,7 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
 
       _nameController.clear();
       setState(() {
-        _selectedType = 'Intermédiaire'; // <-- Fix: use uppercase "I"
+        _selectedType = 'Balise'; // <-- Fix: use uppercase "I"
       });
 
       _fetchMarkers(); // Refresh the markers list
@@ -126,7 +126,7 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       case 2:
         return 'Arrivée';
       case 3:
-        return 'Intermédiaire';
+        return 'Balise';
       default:
         return 'Inconnu';
     }
