@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import '../services/location_service.dart';
+import '../services/api_service.dart';
 import '../widgets/polylines_layer.dart';
 import '../widgets/marker_layer.dart';
 import '../widgets/custom_drawer.dart';
@@ -17,18 +18,23 @@ class PathTrackingMap extends StatefulWidget {
 
 class _PathTrackingMapState extends State<PathTrackingMap> {
   final LocationService _locationService = LocationService();
+  final ApiService _apiService = ApiService();
+
   LocationData? currentLocation;
   late List<LatLng> path;
+  List<LatLng> markerPoints = [];
 
   @override
   void initState() {
     super.initState();
     path = [];
     _initializeLocationTracking();
+    _fetchMarkers();
   }
 
   Future<void> _initializeLocationTracking() async {
-    bool locationGranted = await _locationService.checkAndRequestLocationPermission();
+    bool locationGranted =
+        await _locationService.checkAndRequestLocationPermission();
 
     if (locationGranted) {
       _locationService.startLocationTracking()?.listen((locData) {
@@ -38,8 +44,24 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
         });
       });
     } else {
-      // Si l'autorisation est refusée, on peut afficher un message ou rediriger l'utilisateur
       print("Autorisation de localisation refusée");
+    }
+  }
+
+  Future<void> _fetchMarkers() async {
+    try {
+      final courseId = 1;
+      final markers = await _apiService.fetchMarkers(courseId);
+      setState(() {
+        markerPoints = markers
+        .map<LatLng>((m) => LatLng(
+              double.parse(m['latitude'].toString()),
+              double.parse(m['longitude'].toString()),
+            ))
+        .toList();
+      });
+    } catch (e) {
+      print('Erreur lors du chargement des marqueurs: $e');
     }
   }
 
@@ -68,6 +90,21 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
                     currentLocation!.longitude!,
                   ),
                 ),
+                MarkerLayer(
+                  markers: markerPoints
+                      .map((point) => Marker(
+                            point: point,
+                            width: 40,
+                            height: 40,
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 32,
+                            ),
+                          ))
+                      .toList(),
+                ),
+
               ],
             ),
     );
