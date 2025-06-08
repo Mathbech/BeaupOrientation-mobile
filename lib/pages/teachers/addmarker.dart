@@ -18,7 +18,7 @@ class AddMarkerPage extends StatefulWidget {
 }
 
 class _AddMarkerPageState extends State<AddMarkerPage> {
-  final List<String> _markers = [];
+  final List<Map<String, dynamic>> _markers = []; // <-- Change ici
   final MarkerService _markerService = MarkerService();
   final ApiService _apiService = ApiService();
   final Logger _logger = Logger();
@@ -49,8 +49,12 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       setState(() {
         _markers.clear();
         for (var marker in markers) {
-          _markers
-              .add('Lat: ${marker['latitude']}, Lng: ${marker['longitude']}');
+          _markers.add({
+            'name': marker['name'] ?? '',
+            'type': marker['type'] ?? '',
+            'latitude': marker['latitude'],
+            'longitude': marker['longitude'],
+          });
         }
       });
     } catch (e) {
@@ -114,6 +118,20 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
     }
   }
 
+  String markerTypeToString(dynamic type) {
+    if (type is String) return type; // Si déjà texte
+    switch (type) {
+      case 1:
+        return 'Départ';
+      case 2:
+        return 'Arrivée';
+      case 3:
+        return 'Intermédiaire';
+      default:
+        return 'Inconnu';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,8 +169,13 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
               child: ListView.builder(
                 itemCount: _markers.length,
                 itemBuilder: (context, index) {
+                  final marker = _markers[index];
                   return ListTile(
-                    title: Text(_markers[index]),
+                    title: Text(marker['name'] ?? ''),
+                    subtitle: Text(
+                      'Type: ${markerTypeToString(marker['type'])} | '
+                      'Lat: ${marker['latitude']}, Lng: ${marker['longitude']}',
+                    ),
                   );
                 },
               ),
