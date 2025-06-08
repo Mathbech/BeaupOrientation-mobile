@@ -18,10 +18,21 @@ class AddMarkerPage extends StatefulWidget {
 }
 
 class _AddMarkerPageState extends State<AddMarkerPage> {
-  final List<String> _markers = [];
+  final List<Map<String, dynamic>> _markers = []; // <-- Change ici
   final MarkerService _markerService = MarkerService();
   final ApiService _apiService = ApiService();
   final Logger _logger = Logger();
+
+  final TextEditingController _nameController = TextEditingController();
+  String _selectedType = 'Balise';
+
+  final List<String> _markerTypes = ['Départ', 'Arrivée', 'Balise'];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -38,8 +49,12 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
       setState(() {
         _markers.clear();
         for (var marker in markers) {
-          _markers.add(
-              'Lat: ${marker['latitude']}, Lng: ${marker['longitude']}');
+          _markers.add({
+            'name': marker['name'] ?? '',
+            'type': marker['type'] ?? '',
+            'latitude': marker['latitude'],
+            'longitude': marker['longitude'],
+          });
         }
       });
     } catch (e) {
@@ -54,6 +69,15 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
   }
 
   Future<void> _addMarker() async {
+    if (_nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Veuillez entrer un nom pour le marqueur'),
+          backgroundColor: CustomColors.error,
+        ),
+      );
+      return;
+    }
     try {
       final teacherId =
           Provider.of<TeacherProvider>(context, listen: false).teacherId;
@@ -66,6 +90,8 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
         position,
         teacherId.toString(),
         courseId.toString(),
+        name: _nameController.text,
+        type: _selectedType,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,6 +100,11 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
           backgroundColor: CustomColors.success,
         ),
       );
+
+      _nameController.clear();
+      setState(() {
+        _selectedType = 'Balise'; // <-- Fix: use uppercase "I"
+      });
 
       _fetchMarkers(); // Refresh the markers list
     } catch (e, stackTrace) {
@@ -87,6 +118,20 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
     }
   }
 
+  String markerTypeToString(dynamic type) {
+    if (type is String) return type; // Si déjà texte
+    switch (type) {
+      case 1:
+        return 'Départ';
+      case 2:
+        return 'Arrivée';
+      case 3:
+        return 'Balise';
+      default:
+        return 'Inconnu';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +141,26 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Nom du marqueur',
+              ),
+            ),
+            DropdownButton<String>(
+              value: _selectedType,
+              items: _markerTypes
+                  .map((type) => DropdownMenuItem(
+                        value: type,
+                        child: Text(type),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedType = value!;
+                });
+              },
+            ),
             ElevatedButton(
               onPressed: _addMarker,
               child: Text('Ajouter un marqueur'),
@@ -104,8 +169,13 @@ class _AddMarkerPageState extends State<AddMarkerPage> {
               child: ListView.builder(
                 itemCount: _markers.length,
                 itemBuilder: (context, index) {
+                  final marker = _markers[index];
                   return ListTile(
-                    title: Text(_markers[index]),
+                    title: Text(marker['name'] ?? ''),
+                    subtitle: Text(
+                      'Type: ${markerTypeToString(marker['type'])} | '
+                      'Lat: ${marker['latitude']}, Lng: ${marker['longitude']}',
+                    ),
                   );
                 },
               ),

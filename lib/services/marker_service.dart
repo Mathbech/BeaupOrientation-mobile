@@ -31,8 +31,35 @@ class MarkerService {
   }
 
   // Enregistre la balise via une API
-  Future<void> saveMarker(Position position, String teacherId, String courseId) async {
-    await _apiService.saveMarker(position, teacherId, courseId);
-  }
+  Future<void> saveMarker(
+    Position position,
+    String teacherId,
+    String courseId, {
+    required String name,
+    required String type,
+  }) async {
+    // Conversion du type texte en chiffre pour l'API
+    int typeInt;
+    switch (type) {
+      case 'Départ':
+        typeInt = 1;
+        break;
+      case 'Balise':
+        typeInt = 2;
+        break;
+      case 'Arrivée':
+        typeInt = 3;
+        break;
+      default:
+        typeInt = 2; // Valeur par défaut
+    }
 
+    await _apiService.saveMarker(
+      position,
+      teacherId,
+      courseId,
+      name: name,
+      type: typeInt, // On passe le chiffre en string si besoin
+    );
+  }
 }
