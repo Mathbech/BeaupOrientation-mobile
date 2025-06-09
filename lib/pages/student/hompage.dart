@@ -32,7 +32,8 @@ class StudentHomePage extends StatelessWidget {
         children: [
           MobileScanner(
             onDetect: (BarcodeCapture capture) {
-              _qrCodeService.handleQRCodeDetection(context, capture);
+              _qrCodeService.handleQRCodeDetection(
+                  context, capture, runner.id.toString());
             },
           ),
           // Les coins du cadre

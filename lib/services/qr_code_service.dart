@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:beauporientation/services/scan_service.dart';
 
 class QRCodeService {
-  bool isProcessing = false; // Drapeau pour bloquer le traitement multiple
+  bool isProcessing = false;
+  final ScanService scanService = ScanService();
 
-  void handleQRCodeDetection(BuildContext context, BarcodeCapture capture) async {
+  void handleQRCodeDetection(
+      BuildContext context, BarcodeCapture capture, String runnerId) async {
     if (isProcessing) return; // Si un traitement est en cours, ne rien faire
 
     final List<Barcode> barcodes = capture.barcodes;
@@ -18,7 +21,8 @@ class QRCodeService {
           bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
           if (!serviceEnabled) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Le service de localisation est désactivé.')),
+              SnackBar(
+                  content: Text('Le service de localisation est désactivé.')),
             );
             isProcessing = false; // Libère le traitement
             return;
@@ -38,7 +42,9 @@ class QRCodeService {
 
           if (permission == LocationPermission.deniedForever) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Permission de localisation refusée de façon permanente.')),
+              SnackBar(
+                  content: Text(
+                      'Permission de localisation refusée de façon permanente.')),
             );
             isProcessing = false; // Libère le traitement
             return;
@@ -52,11 +58,13 @@ class QRCodeService {
           // Bloquez la caméra et affichez une boîte de dialogue de confirmation
           bool? confirm = await showDialog<bool>(
             context: context,
-            barrierDismissible: false, // Empêche de fermer la boîte de dialogue en cliquant à l'extérieur
+            barrierDismissible:
+                false, // Empêche de fermer la boîte de dialogue en cliquant à l'extérieur
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Confirmation'),
-                content: Text('Envoyer les données : $rawValue, Position : ${position.latitude}, ${position.longitude} ?'),
+                content: Text(
+                    'Envoyer les données : $rawValue, Position : ${position.latitude}, ${position.longitude} ?'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false), // Non
@@ -72,10 +80,21 @@ class QRCodeService {
           );
 
           if (confirm == true) {
-            // Envoyez les données à votre API
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Données envoyées : $rawValue')),
-            );
+            try {
+              await scanService.sendScan(
+                runnerId: runnerId,
+                markerCode: rawValue,
+                position: position,
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Scan envoyé avec succès !')),
+              );
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Erreur lors de l\'envoi : $e')),
+              );
+            }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Envoi annulé.')),
@@ -83,7 +102,9 @@ class QRCodeService {
           }
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erreur lors de la récupération de la localisation : $e')),
+            SnackBar(
+                content: Text(
+                    'Erreur lors de la récupération de la localisation : $e')),
           );
         } finally {
           isProcessing = false; // Libère le traitement après la fin
