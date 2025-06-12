@@ -23,6 +23,7 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
   LocationData? currentLocation;
   late List<LatLng> path;
   List<LatLng> markerPoints = [];
+  List<Map<String, dynamic>> markerData = [];
 
   @override
   void initState() {
@@ -53,17 +54,37 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
       final courseId = 1;
       final markers = await _apiService.fetchMarkers(courseId);
       setState(() {
-        markerPoints = markers
+        markerData = markers
             .where((m) => m['latitude'] != null && m['longitude'] != null)
+            .toList();
+        markerPoints = markerData
             .map<LatLng>((m) => LatLng(
                   double.tryParse(m['latitude'].toString()) ?? 0.0,
                   double.tryParse(m['longitude'].toString()) ?? 0.0,
                 ))
             .toList();
       });
+      print(markerData); // Ajoutez cette ligne pour debug
     } catch (e) {
       print('Erreur lors du chargement des marqueurs: $e');
     }
+  }
+
+  void _showMarkerInfo(Map<String, dynamic> marker) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(marker['title'] ?? marker['name'] ?? 'Point d\'intérêt'),
+        content: Text(
+            marker['description'] ?? marker['info'] ?? 'Aucune description.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fermer'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -92,20 +113,24 @@ class _PathTrackingMapState extends State<PathTrackingMap> {
                   ),
                 ),
                 MarkerLayer(
-                  markers: markerPoints
-                      .map((point) => Marker(
-                            point: point,
-                            width: 40,
-                            height: 40,
-                            child: const Icon(
-                              Icons.location_on,
-                              color: Colors.red,
-                              size: 32,
-                            ),
-                          ))
-                      .toList(),
+                  markers: List.generate(markerPoints.length, (i) {
+                    final point = markerPoints[i];
+                    final data = markerData[i];
+                    return Marker(
+                      point: point,
+                      width: 40,
+                      height: 40,
+                      child: GestureDetector(
+                        onTap: () => _showMarkerInfo(data),
+                        child: const Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                          size: 32,
+                        ),
+                      ),
+                    );
+                  }),
                 ),
-
               ],
             ),
     );
