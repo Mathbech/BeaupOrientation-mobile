@@ -4,7 +4,7 @@ import 'api_service.dart';
 class ScanService {
   final ApiService _apiService = ApiService();
 
-  Future<void> sendScan({
+  Future<Map<String, dynamic>> sendScan({
     required String runnerId,
     required String markerCode,
     required Position position,
@@ -16,13 +16,10 @@ class ScanService {
       "point": {
         "srid": 4326,
         "type": "Point",
-        "coordinates": [
-          position.longitude,
-          position.latitude
-        ] // longitude, latitude
+        "coordinates": [position.longitude, position.latitude]
       }
     };
 
-    await _apiService.sendScan(data);
+    return await _apiService.sendScan(data);
   }
 }

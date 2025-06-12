@@ -102,9 +102,8 @@ class ApiService {
     }
   }
 
-  Future<void> sendScan(Map<String, dynamic> data) async {
-    final url = Uri.parse(
-        '${ApiEndpoints.baseUrl}${ApiEndpoints.scanQRCode}'); // À adapter si besoin
+  Future<Map<String, dynamic>> sendScan(Map<String, dynamic> data) async {
+    final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.scanQRCode}');
     logger.i('Sending POST request to $url with body: ${jsonEncode(data)}');
 
     final response = await http.post(
@@ -124,9 +123,17 @@ class ApiService {
 
     logger.i('Received response: ${response.statusCode} ${response.body}');
 
-    if (response.statusCode != 200) {
-      throw Exception('Erreur lors de l\'envoi : ${response.statusCode}');
+    final decoded = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return decoded; // On suppose que {success: true, message: "..."}
+    } else {
+      // On suppose que l'API retourne aussi un message d'erreur dans le body
+      return {
+        "success": false,
+        "message": decoded['message'] ??
+            'Erreur lors de l\'envoi : ${response.statusCode}'
+      };
     }
-    
   }
 }

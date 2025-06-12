@@ -81,15 +81,25 @@ class QRCodeService {
 
           if (confirm == true) {
             try {
-              await scanService.sendScan(
+              final response = await scanService.sendScan(
                 runnerId: runnerId,
                 markerCode: rawValue,
                 position: position,
               );
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Scan envoyé avec succès !')),
-              );
+              if (response['success'] == true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Données envoyées avec succès !')),
+                );
+              } else {
+                // Affiche le message d'erreur retourné par l'API, même pour un 422
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(response['message'] ??
+                        'Erreur inconnue lors de l\'envoi.'),
+                  ),
+                );
+              }
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Erreur lors de l\'envoi : $e')),
