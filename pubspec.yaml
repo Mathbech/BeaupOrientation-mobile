@@ -1,7 +1,7 @@
 name: beauporientation
 description: "Flutter project for the Beauport Orientation app"
 publish_to: 'none'
-version: 1.0.3+103
+version: 1.0.5+105
 
 environment:
   sdk: ^3.5.0

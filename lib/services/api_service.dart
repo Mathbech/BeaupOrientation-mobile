@@ -63,7 +63,7 @@ class ApiService {
           "point": {
             "srid": 4326,
             "type": "Point",
-            "coordinates": [position.latitude, position.longitude]
+            "coordinates": [position.longitude, position.latitude]
           },
           'teacher': '/api/users/$teacherId',
           'courses': '/api/courses/$courseId',
@@ -99,6 +99,41 @@ class ApiService {
       return List<Map<String, dynamic>>.from(data['member']);
     } else {
       throw Exception('Failed to fetch markers');
+    }
+  }
+
+  Future<Map<String, dynamic>> sendScan(Map<String, dynamic> data) async {
+    final url = Uri.parse('${ApiEndpoints.baseUrl}${ApiEndpoints.scanQRCode}');
+    logger.i('Sending POST request to $url with body: ${jsonEncode(data)}');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'runner_id': data['runner_id'],
+        'marker_code': data['marker_code'],
+        'scannedAt': data['scannedAt'],
+        'point': {
+          'srid': 4326,
+          'type': 'Point',
+          'coordinates': data['point']?['coordinates'] ?? [0, 0],
+        },
+      }),
+    );
+
+    logger.i('Received response: ${response.statusCode} ${response.body}');
+
+    final decoded = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return decoded; // On suppose que {success: true, message: "..."}
+    } else {
+      // On suppose que l'API retourne aussi un message d'erreur dans le body
+      return {
+        "success": false,
+        "message": decoded['message'] ??
+            'Erreur lors de l\'envoi : ${response.statusCode}'
+      };
     }
   }
 }
